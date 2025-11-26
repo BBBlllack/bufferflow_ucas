@@ -49,7 +49,7 @@ int main()
 
 查找结果如图
 
-![image-20251127004206109](.\缓冲区溢出ccftp.assets\image-20251127004206109.png)
+![image-20251127004206109](./缓冲区溢出ccftp.assets/image-20251127004206109.png)
 
 有非常多的地址，随便选一个就行，后续实验使用0x7ffa4512统一。
 
@@ -59,7 +59,7 @@ int main()
 
 首先使用`cdb -pn ccproxy.exe`挂起进程，使用g参数继续执行，之后用python构建socket发送超长字符串。
 
-![image-20251127002924074](.\缓冲区溢出ccftp.assets\image-20251127002924074.png)
+![image-20251127002924074](./缓冲区溢出ccftp.assets/image-20251127002924074.png)
 
 ```python
 import socket
@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
 执行攻击查看cdb
 
-![image-20251127003252962](.\缓冲区溢出ccftp.assets\image-20251127003252962.png)
+![image-20251127003252962](./缓冲区溢出ccftp.assets/image-20251127003252962.png)
 
 查看得到`eip=0x6a42376a jB7j `, `esp=0x61413161 aA1a`，由于小端序，需要反转一下，`eip=j7Bj,esp=a1Aa`，定位偏移。
 
@@ -143,7 +143,7 @@ int main()
 
 
 
-![image-20251127005045952](.\缓冲区溢出ccftp.assets\image-20251127005045952.png)
+![image-20251127005045952](./缓冲区溢出ccftp.assets/image-20251127005045952.png)
 
 通过上面的代码可以获取这段弹出计算器的机器码，之后写一段python使用socket发送给ccproxy，这段代码添加了一个`0x7c81cafa`调用，为退出程序，不弹出报错窗口。
 
@@ -194,7 +194,7 @@ if __name__ == '__main__':
 
 执行这段代码，成功弹出计算器。
 
-![image-20251127011057506](.\缓冲区溢出ccftp.assets\image-20251127011057506.png)
+![image-20251127011057506](./缓冲区溢出ccftp.assets/image-20251127011057506.png)
 
 
 
@@ -204,7 +204,7 @@ if __name__ == '__main__':
 
 直接发送相同的字符串，查看溢出点。
 
-![image-20251127011608030](.\缓冲区溢出ccftp.assets\image-20251127011608030.png)
+![image-20251127011608030](./缓冲区溢出ccftp.assets/image-20251127011608030.png)
 
 ```python
 eip=0x32714131 # 486 2qA1 
@@ -251,7 +251,7 @@ if __name__ == '__main__':
 
 关键要使用`ftp.sock.sendall`或者自己用socket写ftp协议，如果使用`ftp.login`会不成功，执行代码，成功弹出计算器。
 
-![image-20251127012006885](.\缓冲区溢出ccftp.assets\image-20251127012006885.png)
+![image-20251127012006885](./缓冲区溢出ccftp.assets/image-20251127012006885.png)
 
 
 
@@ -305,7 +305,7 @@ def send_long_str():
 
 
 
-![image-20251127013310449](.\缓冲区溢出ccftp.assets\image-20251127013310449.png)
+![image-20251127013310449](./缓冲区溢出ccftp.assets/image-20251127013310449.png)
 
 ```python
 eip=0x41357041 A5pA Ap5A 466 
@@ -443,6 +443,6 @@ if __name__ == "__main__":
 
  执行效果如下
 
-![image-20251127014003193](.\缓冲区溢出ccftp.assets\image-20251127014003193.png)
+![image-20251127014003193](./缓冲区溢出ccftp.assets/image-20251127014003193.png)
 
 至此，三个实验演示完毕。
